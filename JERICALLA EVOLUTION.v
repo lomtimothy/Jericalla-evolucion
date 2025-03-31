@@ -69,13 +69,22 @@ endmodule
 
 // Testbench
 module Jericalla_tb();
+
+// Parámetro: número de instrucciones en el archivo "datos.txt"
+ parameter NUM_INSTR = 6;
+  
 reg [16:0] instruccion;
 reg clk;
 wire [31:0] salida;
 
+// Memoria para almacenar las instrucciones leídas del archivo
+  reg [16:0] instr_mem [0:NUM_INSTR-1];
+
 // Instancia del módulo Jericalla
 Jericalla JTestBench (.instruccion(instruccion),.clk(clk),.salida(salida));
 
+ integer i;
+ 
 // Reloj
 initial begin
     clk = 0;
@@ -83,31 +92,19 @@ initial begin
 end
 
 initial begin	
-    // Caso 1: Sumamos 0 y 1 y lo guardamos en 4
-    instruccion = 17'b00_00100_00000_00001;
+// Esperar un breve lapso para que se inicialicen otros bloques
     #1000;
-
-    // Caso 2: Restamos 1 y 2 y lo guardamos en 5
-    instruccion = 17'b01_00101_00001_00010;
-    #1000;
-
-    // Caso 3: Ternaria de 2 y 3 y guardamos en 6
-    instruccion = 17'b10_00110_00010_00011;
-    #1000;
-
-    // Caso 4: Store Word del valor de la pos 4 guardado en el valor de la pos 7 en MemData
-    instruccion = 17'b11_11111_00111_00100;
-    #1000;
-
-    // Caso 5: Store Word del valor de la pos 5 guardado en el valor de la pos 8 en MemData
-    instruccion = 17'b11_11111_01000_00101;
-    #1000;
-
-    // Caso 6: Store Word del valor de la pos 6 guardado en el valor de la pos 9 en MemData
-    instruccion = 17'b11_11111_01001_00110;
-    #1000;
-
-    // Finaliza la simulación
+    // Cargar el archivo binario generado por Python ("datos.txt") en la memoria instr_mem
+    $readmemb("datos.txt", instr_mem);
+	
+      // Recorremos las instrucciones una a una
+    for (i = 0; i < NUM_INSTR; i = i + 1) begin
+      instruccion = instr_mem[i];
+      // Esperar tiempo suficiente para que la instrucción se ejecute (ajusta según tu diseño)
+      #1000;
+    end
+    
     $stop;
-end
+  end
+  
 endmodule
