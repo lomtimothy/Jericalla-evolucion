@@ -100,7 +100,7 @@ initial begin
       // Recorremos las instrucciones una a una
     for (i = 0; i < NUM_INSTR; i = i + 1) begin
       instruccion = instr_mem[i];
-      // Esperar tiempo suficiente para que la instrucción se ejecute (ajusta según tu diseño)
+      // Esperar tiempo suficiente para que la instrucción se ejecute
       #1000;
     end
     
